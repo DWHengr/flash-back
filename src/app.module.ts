@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from 'nestjs-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestModule } from './modules/test/test.module';
 import { UserModule } from './modules/user/user.module';
+import { GlobalExceptionFilter } from './filter/global.exception.filter';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -14,6 +16,12 @@ import { UserModule } from './modules/user/user.module';
     }),
     TestModule,
     UserModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    },
   ],
 })
 export class AppModule {}

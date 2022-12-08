@@ -15,11 +15,17 @@ export class ResUtil {
     };
   }
 
-  public static fail<T>(data: T) {
+  public static fail() {
     return {
       [this.MSG]: '操作失败',
       [this.CODE]: this.CODE_FAIL,
-      [this.DATA]: data,
+    };
+  }
+
+  public static failMsg(msg: string) {
+    return {
+      [this.MSG]: msg,
+      [this.CODE]: this.CODE_FAIL,
     };
   }
 }
