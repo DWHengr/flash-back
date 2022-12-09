@@ -1,10 +1,10 @@
 export class ResUtil {
-  private static readonly MSG = 'msg';
-  private static readonly CODE = 'code';
-  private static readonly DATA = 'data';
+  public static readonly MSG = 'msg';
+  public static readonly CODE = 'code';
+  public static readonly DATA = 'data';
 
-  private static readonly CODE_SUCCESS = 0; //成功
-  private static readonly CODE_FAIL = 1; //失败
+  public static readonly CODE_SUCCESS = 0; //成功
+  public static readonly CODE_FAIL = 1; //失败
   private;
 
   public static success<T>(data: T) {
@@ -19,6 +19,13 @@ export class ResUtil {
     return {
       [this.MSG]: '操作失败',
       [this.CODE]: this.CODE_FAIL,
+    };
+  }
+
+  public static failCodeAndMsg(code: number, msg: string) {
+    return {
+      [this.MSG]: msg,
+      [this.CODE]: code,
     };
   }
 
