@@ -6,6 +6,7 @@ import { TestModule } from './modules/test/test.module';
 import { UserModule } from './modules/user/user.module';
 import { GlobalExceptionFilter } from './filter/global.exception.filter';
 import { APP_FILTER } from '@nestjs/core';
+import { LoggerModule } from './modules/logger/logger.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { APP_FILTER } from '@nestjs/core';
       useFactory: (config: ConfigService) => config.get('database'),
       inject: [ConfigService],
     }),
+    LoggerModule,
     TestModule,
     UserModule,
   ],
