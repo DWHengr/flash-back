@@ -1,5 +1,10 @@
 import { resolve } from 'path';
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from 'nestjs-config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestModule } from './modules/test/test.module';
@@ -7,6 +12,7 @@ import { UserModule } from './modules/user/user.module';
 import { GlobalExceptionFilter } from './filter/global.exception.filter';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from './modules/logger/logger.module';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -26,4 +32,11 @@ import { LoggerModule } from './modules/logger/logger.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .exclude('v1/user/(.*)')
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
