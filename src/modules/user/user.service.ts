@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Connection, DeleteResult, Repository } from "typeorm";
 import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
 
@@ -22,6 +22,10 @@ export class UserService {
       throw new FlashException('用户不存在');
     }
     return user;
+  }
+
+  async delete(ids: number[]): Promise<DeleteResult> {
+    return await this.userRepository.delete(ids);
   }
 
   async findByName(username: string): Promise<UserEntity> {
