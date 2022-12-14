@@ -1,11 +1,10 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiProperty, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserVo } from './vo/create.user.vo';
 import { ResUtil } from '../../utils/res.util';
 import { LoginUserVo } from './vo/login.user.vo';
 import { JwtUtil } from '../../utils/jwt.util';
-import { ApiImplicitBody } from "@nestjs/swagger/dist/decorators/api-implicit-body.decorator";
 
 @ApiTags('用户接口')
 @Controller('user')
