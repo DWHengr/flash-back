@@ -10,4 +10,8 @@ export class CollocateService {
     private readonly collocateEntityRepository: Repository<CollocateEntity>,
     private connection: Connection,
   ) {}
+
+  async crete(collocate: any): Promise<CollocateEntity[]> {
+    return await this.collocateEntityRepository.save(collocate);
+  }
 }
