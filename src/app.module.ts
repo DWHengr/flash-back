@@ -13,6 +13,7 @@ import { GlobalExceptionFilter } from './filter/global.exception.filter';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from './modules/logger/logger.module';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { CollocateModule } from './modules/collocate/collocate.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthMiddleware } from './middleware/auth.middleware';
     }),
     LoggerModule,
     TestModule,
+    CollocateModule,
     UserModule,
   ],
   providers: [
