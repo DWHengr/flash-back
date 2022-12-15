@@ -1,4 +1,4 @@
-import { ApiBody, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Post } from '@nestjs/common';
 import { CollocateService } from './collocate.service';
 import { ResUtil } from '../../utils/res.util';
@@ -21,6 +21,16 @@ export class CollocateController {
   @Post('delete')
   async delete(@Body() ids: number[]) {
     const data = await this.collocateService.delete(ids);
+    return ResUtil.success(data);
+  }
+
+  @ApiOperation({ summary: '用户配置更新' })
+  @Post('update')
+  async update(@Body() collocateVo: CreateCollocateVo) {
+    const data = await this.collocateService.update({
+      id: collocateVo.userId,
+      collocateContents: collocateVo.collocateContents,
+    });
     return ResUtil.success(data);
   }
 }

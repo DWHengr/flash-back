@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, DeleteResult, Repository } from "typeorm";
+import { Connection, DeleteResult, Repository } from 'typeorm';
 import { CollocateEntity } from './collocate.entity';
+import { FlashException } from '../../exception/flash.exception';
 
 @Injectable()
 export class CollocateService {
@@ -17,5 +18,20 @@ export class CollocateService {
 
   async delete(ids: number[]): Promise<DeleteResult> {
     return await this.collocateEntityRepository.delete(ids);
+  }
+
+  async update(collocate: {
+    id: string;
+    collocateContents: string;
+  }): Promise<CollocateEntity> {
+    if (!collocate.id) {
+      throw new FlashException('Id不能为空');
+    }
+    const toUpdate = await this.collocateEntityRepository.findOne(collocate.id);
+    if (!toUpdate) {
+      throw new FlashException('用户不存在');
+    }
+    toUpdate.collocateContents = collocate.collocateContents;
+    return await this.collocateEntityRepository.save(toUpdate);
   }
 }
