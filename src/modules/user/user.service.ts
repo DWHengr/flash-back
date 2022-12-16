@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, DeleteResult, Repository } from "typeorm";
+import { Connection, DeleteResult, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
 
@@ -34,5 +34,9 @@ export class UserService {
       throw new FlashException('用户不存在');
     }
     return user;
+  }
+
+  async update(user: any): Promise<UserEntity[]> {
+    return await this.userRepository.save(user);
   }
 }

@@ -5,6 +5,7 @@ import { CreateUserVo } from './vo/create.user.vo';
 import { ResUtil } from '../../utils/res.util';
 import { LoginUserVo } from './vo/login.user.vo';
 import { JwtUtil } from '../../utils/jwt.util';
+import { CreateCollocateVo } from '../collocate/vo/create.collocate.vo';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -31,6 +32,13 @@ export class UserController {
   @Post('delete')
   async delete(@Body() ids: number[]) {
     const data = await this.userService.delete(ids);
+    return ResUtil.success(data);
+  }
+
+  @ApiOperation({ summary: '用户更新' })
+  @Post('update')
+  async update(@Body() userVo: CreateUserVo) {
+    const data = await this.userService.update(userVo);
     return ResUtil.success(data);
   }
 }
