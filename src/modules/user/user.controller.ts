@@ -13,7 +13,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: '用户创建' })
-  @Post('create')
+  @Post('register')
   async create(@Body() userVo: CreateUserVo) {
     const data = await this.userService.crete(userVo);
     return ResUtil.success(data);

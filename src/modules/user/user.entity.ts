@@ -20,7 +20,7 @@ export class UserEntity {
   @Column({ comment: '手机号', default: '' })
   phone: string;
 
-  @Column({ comment: '邮箱' })
+  @Column({ comment: '邮箱', default: '' })
   email: string;
 
   @CreateDateColumn({
