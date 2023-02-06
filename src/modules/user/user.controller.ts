@@ -5,7 +5,7 @@ import { CreateUserVo } from './vo/create.user.vo';
 import { ResUtil } from '../../utils/res.util';
 import { LoginUserVo } from './vo/login.user.vo';
 import { JwtUtil } from '../../utils/jwt.util';
-import { CreateCollocateVo } from '../collocate/vo/create.collocate.vo';
+import { UserEntity } from './user.entity';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -22,9 +22,9 @@ export class UserController {
   @ApiOperation({ summary: '用户登录' })
   @Post('login')
   async login(@Body() userVo: LoginUserVo) {
-    const user = await this.userService.findByName(userVo.username);
+    const user: UserEntity = await this.userService.findByName(userVo.username);
     const token = JwtUtil.createToken(user);
-    return ResUtil.success({ token });
+    return ResUtil.success({ token, username: user.username });
   }
 
   @ApiOperation({ summary: '用户删除' })
