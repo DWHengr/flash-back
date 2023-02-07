@@ -6,6 +6,7 @@ import { ResUtil } from '../../utils/res.util';
 import { LoginUserVo } from './vo/login.user.vo';
 import { JwtUtil } from '../../utils/jwt.util';
 import { UserEntity } from './user.entity';
+import { FlashException } from '../../exception/flash.exception';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -23,6 +24,9 @@ export class UserController {
   @Post('login')
   async login(@Body() userVo: LoginUserVo) {
     const user: UserEntity = await this.userService.findByName(userVo.username);
+    if (userVo.password != user.password) {
+      throw new FlashException('密码错误');
+    }
     const token = JwtUtil.createToken(user);
     return ResUtil.success({ token, username: user.username });
   }
