@@ -6,12 +6,16 @@ import { JwtUtil } from '../utils/jwt.util';
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(private readonly userService: UserService) {}
-  use(req: any, res: any, next: (error?: any) => void): any {
+  async use(req: any, res: any, next: (error?: any) => void): Promise<any> {
     const token = req.headers.token;
     if (token) {
-      const decoded: any = JwtUtil.parseToken(token);
-      const user = this.userService.findById(decoded.id);
-      req.user = user;
+      try {
+        const decoded: any = JwtUtil.parseToken(token);
+        const user = await this.userService.findById(decoded.id);
+        req.user = user;
+      } catch {
+        throw new FlashException('Authentication failure.', -1);
+      }
       next();
     } else {
       throw new FlashException('Not authorized.');

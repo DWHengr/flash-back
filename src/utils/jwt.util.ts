@@ -10,11 +10,11 @@ export class JwtUtil {
         email: user.email,
       },
       this.SECRET,
-      { expiresIn: '7d', issuer: 'flash' },
+      { expiresIn: '14d', issuer: 'flash' },
     );
   }
 
   public static parseToken(token: string): any {
-    jwt.verify(token, this.SECRET);
+    return jwt.verify(token, this.SECRET);
   }
 }
