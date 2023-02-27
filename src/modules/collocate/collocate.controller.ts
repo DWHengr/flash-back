@@ -1,8 +1,9 @@
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { CollocateService } from './collocate.service';
 import { ResUtil } from '../../utils/res.util';
 import { CreateCollocateVo } from './vo/create.collocate.vo';
+import { CollocateEntity } from './collocate.entity';
 
 @ApiTags('用户配置接口')
 @Controller('collocate')
@@ -12,8 +13,12 @@ export class CollocateController {
   @ApiOperation({ summary: '用户配置创建' })
   @Post('create')
   async create(@Body() collocateVo: CreateCollocateVo, @Req() request) {
-    collocateVo.userId = request.user.id;
-    const data = await this.collocateService.crete(collocateVo);
+    const collocateEntity = new CollocateEntity();
+    collocateEntity.collocateContents = collocateVo.collocateContents;
+    collocateEntity.userId = request.user.id;
+    collocateEntity.collocateName =
+      '双击修改名称-' + new Date().toLocaleString();
+    const data = await this.collocateService.crete(collocateEntity);
     return ResUtil.success(data);
   }
 
