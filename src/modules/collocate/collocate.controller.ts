@@ -39,4 +39,12 @@ export class CollocateController {
     });
     return ResUtil.success(data);
   }
+
+  @ApiOperation({ summary: '用户配置列表' })
+  @Get('list')
+  async list(@Req() request) {
+    const userId = request.user.id;
+    const data = await this.collocateService.list(userId);
+    return ResUtil.success(data);
+  }
 }

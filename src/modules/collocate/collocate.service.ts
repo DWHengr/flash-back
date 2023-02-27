@@ -34,4 +34,17 @@ export class CollocateService {
     toUpdate.collocateContents = collocate.collocateContents;
     return await this.collocateEntityRepository.save(toUpdate);
   }
+
+  async list(userId: string) {
+    if (!userId) {
+      throw new FlashException('Id不能为空');
+    }
+    const Collocates: CollocateEntity[] =
+      await this.collocateEntityRepository.find({
+        select: ['id', 'collocateName', 'createTime'],
+        where: { userId: userId },
+        order: { createTime: 'DESC' },
+      });
+    return Collocates;
+  }
 }
