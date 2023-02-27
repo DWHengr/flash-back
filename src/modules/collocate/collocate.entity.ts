@@ -14,6 +14,9 @@ export class CollocateEntity {
   @Column({ name: 'user_id', comment: '用户id' })
   userId: string;
 
+  @Column({ name: 'collocate_name', type: 'varchar', comment: '名称' })
+  collocateName: string;
+
   @Column({ name: 'collocate_contents', type: 'text', comment: '用户id' })
   collocateContents: string;
 
