@@ -20,14 +20,14 @@ export class CollocateEntity {
   @Column({ name: 'collocate_contents', type: 'text', comment: '用户id' })
   collocateContents: string;
 
-  @CreateDateColumn({
+  @Column({
     name: 'create_time',
     type: 'datetime',
     comment: '创建时间',
   })
   createTime: Date;
 
-  @UpdateDateColumn({
+  @Column({
     name: 'update_time',
     type: 'datetime',
     comment: '修改时间',

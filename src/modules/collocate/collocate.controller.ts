@@ -14,10 +14,12 @@ export class CollocateController {
   @Post('create')
   async create(@Body() collocateVo: CreateCollocateVo, @Req() request) {
     const collocateEntity = new CollocateEntity();
+    const now = new Date();
     collocateEntity.collocateContents = collocateVo.collocateContents;
     collocateEntity.userId = request.user.id;
-    collocateEntity.collocateName =
-      '双击修改名称-' + new Date().toLocaleString();
+    collocateEntity.collocateName = '双击修改名称-' + now.toLocaleString();
+    collocateEntity.createTime = now;
+    collocateEntity.updateTime = now;
     const data = await this.collocateService.crete(collocateEntity);
     return ResUtil.success(data);
   }
