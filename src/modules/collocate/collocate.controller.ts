@@ -4,6 +4,7 @@ import { CollocateService } from './collocate.service';
 import { ResUtil } from '../../utils/res.util';
 import { CreateCollocateVo } from './vo/create.collocate.vo';
 import { CollocateEntity } from './collocate.entity';
+import { updateCollocateVo } from './vo/update.collocate.vo';
 
 @ApiTags('用户配置接口')
 @Controller('collocate')
@@ -32,14 +33,17 @@ export class CollocateController {
     return ResUtil.success(data);
   }
 
-  @ApiOperation({ summary: '用户配置更新' })
+  @ApiOperation({ summary: '用户配置修改' })
   @Post('update')
-  async update(@Body() collocateVo: CreateCollocateVo) {
+  async update(@Body() collocateVo: updateCollocateVo) {
     const data = await this.collocateService.update({
-      id: collocateVo.userId,
-      collocateContents: collocateVo.collocateContents,
+      id: collocateVo.id,
+      collocateName: collocateVo.collocateName,
     });
-    return ResUtil.success(data);
+    if (data) {
+      return ResUtil.success(null);
+    }
+    return ResUtil.fail();
   }
 
   @ApiOperation({ summary: '用户配置列表' })

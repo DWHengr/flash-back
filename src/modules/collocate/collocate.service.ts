@@ -21,17 +21,17 @@ export class CollocateService {
   }
 
   async update(collocate: {
-    id: string;
-    collocateContents: string;
+    id: number;
+    collocateName: string;
   }): Promise<CollocateEntity> {
     if (!collocate.id) {
       throw new FlashException('Id不能为空');
     }
     const toUpdate = await this.collocateEntityRepository.findOne(collocate.id);
     if (!toUpdate) {
-      throw new FlashException('用户不存在');
+      throw new FlashException('配置不存在');
     }
-    toUpdate.collocateContents = collocate.collocateContents;
+    toUpdate.collocateName = collocate.collocateName;
     return await this.collocateEntityRepository.save(toUpdate);
   }
 
