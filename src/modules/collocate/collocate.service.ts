@@ -47,4 +47,12 @@ export class CollocateService {
       });
     return Collocates;
   }
+
+  async info(id: string, userId: any) {
+    const Collocate: CollocateEntity =
+      await this.collocateEntityRepository.findOne({
+        where: { userId: userId, id: id },
+      });
+    return Collocate;
+  }
 }

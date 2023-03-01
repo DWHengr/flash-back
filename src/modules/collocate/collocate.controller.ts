@@ -1,5 +1,5 @@
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { CollocateService } from './collocate.service';
 import { ResUtil } from '../../utils/res.util';
 import { CreateCollocateVo } from './vo/create.collocate.vo';
@@ -51,6 +51,14 @@ export class CollocateController {
   async list(@Req() request) {
     const userId = request.user.id;
     const data = await this.collocateService.list(userId);
+    return ResUtil.success(data);
+  }
+
+  @ApiOperation({ summary: '根据id查询用户配置信息' })
+  @Get('info/:id')
+  async info(@Param('id') id: string, @Req() request) {
+    const userId = request.user.id;
+    const data = await this.collocateService.info(id, userId);
     return ResUtil.success(data);
   }
 }
