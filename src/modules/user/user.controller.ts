@@ -16,6 +16,10 @@ export class UserController {
   @ApiOperation({ summary: '用户创建' })
   @Post('register')
   async create(@Body() userVo: CreateUserVo) {
+    const user: UserEntity = await this.userService.findByName(userVo.username);
+    if (user) {
+      throw new FlashException('用户已存在');
+    }
     const data = await this.userService.crete(userVo);
     return ResUtil.success(data);
   }
@@ -24,6 +28,9 @@ export class UserController {
   @Post('login')
   async login(@Body() userVo: LoginUserVo) {
     const user: UserEntity = await this.userService.findByName(userVo.username);
+    if (!user) {
+      throw new FlashException('用户不存在');
+    }
     if (userVo.password != user.password) {
       throw new FlashException('密码错误');
     }
@@ -31,18 +38,18 @@ export class UserController {
     return ResUtil.success({ token, username: user.username });
   }
 
-  @ApiOperation({ summary: '用户删除' })
-  @ApiBody({ type: Number, description: '用户ids', isArray: true })
-  @Post('delete')
-  async delete(@Body() ids: number[]) {
-    const data = await this.userService.delete(ids);
-    return ResUtil.success(data);
-  }
+  // @ApiOperation({ summary: '用户删除' })
+  // @ApiBody({ type: Number, description: '用户ids', isArray: true })
+  // @Post('delete')
+  // async delete(@Body() ids: number[]) {
+  //   const data = await this.userService.delete(ids);
+  //   return ResUtil.success(data);
+  // }
 
-  @ApiOperation({ summary: '用户更新' })
-  @Post('update')
-  async update(@Body() userVo: CreateUserVo) {
-    const data = await this.userService.update(userVo);
-    return ResUtil.success(data);
-  }
+  // @ApiOperation({ summary: '用户更新' })
+  // @Post('update')
+  // async update(@Body() userVo: CreateUserVo) {
+  //   const data = await this.userService.update(userVo);
+  //   return ResUtil.success(data);
+  // }
 }

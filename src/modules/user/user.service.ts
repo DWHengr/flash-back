@@ -30,9 +30,6 @@ export class UserService {
 
   async findByName(username: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ username });
-    if (!user) {
-      throw new FlashException('用户不存在');
-    }
     return user;
   }
 
