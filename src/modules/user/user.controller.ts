@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserVo } from './vo/create.user.vo';
@@ -36,6 +36,14 @@ export class UserController {
     }
     const token = JwtUtil.createToken(user);
     return ResUtil.success({ token, username: user.username });
+  }
+
+  @ApiOperation({ summary: '获取用户信息' })
+  @Get('info')
+  async info(@Req() request) {
+    const userId = request.user.id;
+    const data = await this.userService.info(userId);
+    return ResUtil.success(data);
   }
 
   // @ApiOperation({ summary: '用户删除' })
