@@ -7,6 +7,7 @@ import { LoginUserVo } from './vo/login.user.vo';
 import { JwtUtil } from '../../utils/jwt.util';
 import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
+import { PwdUserVo } from './vo/pwd.user.vo';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -44,6 +45,15 @@ export class UserController {
     const userId = request.user.id;
     const data = await this.userService.info(userId);
     return ResUtil.success(data);
+  }
+
+  @ApiOperation({ summary: '获取用户信息' })
+  @Get('pwd')
+  async changePwd(@Body() pwdVo: PwdUserVo, @Req() request) {
+    const userId = request.user.id;
+    const data = await this.userService.changePwd(userId, pwdVo);
+    if (data) return ResUtil.success('修改成功');
+    return ResUtil.failMsg('修改失败');
   }
 
   // @ApiOperation({ summary: '用户删除' })

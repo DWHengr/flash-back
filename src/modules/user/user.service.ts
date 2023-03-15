@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, DeleteResult, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
+import { PwdUserVo } from './vo/pwd.user.vo';
 
 @Injectable()
 export class UserService {
@@ -42,5 +43,17 @@ export class UserService {
       where: { id: userId },
     });
     return user;
+  }
+
+  async changePwd(userId: any, pwdVo: PwdUserVo) {
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new FlashException('用户不存在');
+    }
+    if (user.password != pwdVo.oldPassword) {
+      throw new FlashException('原始密码错误');
+    }
+    user.password = pwdVo.newPassword;
+    return await this.userRepository.save(user);
   }
 }
