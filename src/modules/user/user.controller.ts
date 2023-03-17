@@ -47,8 +47,8 @@ export class UserController {
     return ResUtil.success(data);
   }
 
-  @ApiOperation({ summary: '获取用户信息' })
-  @Get('pwd')
+  @ApiOperation({ summary: '修改密码' })
+  @Post('pwd')
   async changePwd(@Body() pwdVo: PwdUserVo, @Req() request) {
     const userId = request.user.id;
     const data = await this.userService.changePwd(userId, pwdVo);
