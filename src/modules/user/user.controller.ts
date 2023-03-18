@@ -36,7 +36,11 @@ export class UserController {
       throw new FlashException('密码错误');
     }
     const token = JwtUtil.createToken(user);
-    return ResUtil.success({ token, username: user.username });
+    return ResUtil.success({
+      token,
+      username: user.username,
+      avatar: user.avatar,
+    });
   }
 
   @ApiOperation({ summary: '获取用户信息' })

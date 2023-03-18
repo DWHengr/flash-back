@@ -23,6 +23,9 @@ export class UserEntity {
   @Column({ comment: '邮箱', default: '' })
   email: string;
 
+  @Column({ comment: '头像', type: 'text' })
+  avatar: string;
+
   @CreateDateColumn({
     name: 'create_time',
     type: 'datetime',
