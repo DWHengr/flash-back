@@ -8,6 +8,7 @@ import { JwtUtil } from '../../utils/jwt.util';
 import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
 import { PwdUserVo } from './vo/pwd.user.vo';
+import { AvatarUserVo } from './vo/avatar.user.vo';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -56,6 +57,15 @@ export class UserController {
   async changePwd(@Body() pwdVo: PwdUserVo, @Req() request) {
     const userId = request.user.id;
     const data = await this.userService.changePwd(userId, pwdVo);
+    if (data) return ResUtil.success('修改成功');
+    return ResUtil.failMsg('修改失败');
+  }
+
+  @ApiOperation({ summary: '修改头像' })
+  @Post('avatar')
+  async changeAvatar(@Body() avatarVo: AvatarUserVo, @Req() request) {
+    const userId = request.user.id;
+    const data = await this.userService.changeAvatar(userId, avatarVo);
     if (data) return ResUtil.success('修改成功');
     return ResUtil.failMsg('修改失败');
   }

@@ -4,6 +4,7 @@ import { Connection, DeleteResult, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
 import { PwdUserVo } from './vo/pwd.user.vo';
+import { AvatarUserVo } from './vo/avatar.user.vo';
 
 @Injectable()
 export class UserService {
@@ -54,6 +55,15 @@ export class UserService {
       throw new FlashException('原始密码错误');
     }
     user.password = pwdVo.newPassword;
+    return await this.userRepository.save(user);
+  }
+
+  async changeAvatar(userId: any, avatarVo: AvatarUserVo) {
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new FlashException('用户不存在');
+    }
+    user.avatar = avatarVo.avatar;
     return await this.userRepository.save(user);
   }
 }
