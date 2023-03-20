@@ -14,6 +14,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { LoggerModule } from './modules/logger/logger.module';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { CollocateModule } from './modules/collocate/collocate.module';
+import { EmailModule } from './modules/email/email.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CollocateModule } from './modules/collocate/collocate.module';
       inject: [ConfigService],
     }),
     LoggerModule,
+    EmailModule,
     TestModule,
     CollocateModule,
     UserModule,
