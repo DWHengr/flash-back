@@ -10,6 +10,7 @@ import { FlashException } from '../../exception/flash.exception';
 import { PwdUserVo } from './vo/pwd.user.vo';
 import { AvatarUserVo } from './vo/avatar.user.vo';
 import { CodeUserVo } from './vo/code.user.vo';
+import { FlashUtil } from '../../utils/flash.util';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -19,6 +20,15 @@ export class UserController {
   @ApiOperation({ summary: '用户创建' })
   @Post('register')
   async create(@Body() userVo: CreateUserVo) {
+    if (FlashUtil.validateSpecialCharacters(userVo.username)) {
+      throw new FlashException('用户名只能包含字符和数字');
+    }
+    if (userVo.username.length < 6) {
+      throw new FlashException('用户名最小长度为6位');
+    }
+    if (userVo.password.length < 6) {
+      throw new FlashException('密码最小长度为6位');
+    }
     const user: UserEntity = await this.userService.findByName(userVo.username);
     if (user) {
       throw new FlashException('用户已存在');
@@ -74,6 +84,9 @@ export class UserController {
   @ApiOperation({ summary: '发送验证码' })
   @Post('code')
   async verify(@Body() codeVo: CodeUserVo, @Req() request) {
+    if (!FlashUtil.validateEmail(codeVo.email)) {
+      throw new FlashException('邮箱格式错误');
+    }
     const userId = request.user.id;
     await this.userService.sendVerifyCode(userId, codeVo.email);
     return ResUtil.success(null);

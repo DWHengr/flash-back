@@ -34,4 +34,22 @@ export class FlashUtil {
     const difSecs = Math.floor(diffMs / 1000);
     return difSecs;
   }
+
+  /**
+   * Verify that it is in mailbox format
+   * @param email
+   */
+  public static validateEmail(email: string): boolean {
+    const emailRegex = /\S+@\S+\.\S+/;
+    return emailRegex.test(email);
+  }
+
+  /**
+   * Verify that special characters are included
+   * @param email
+   */
+  public static validateSpecialCharacters(str: string): boolean {
+    const pattern = /[^A-Za-z0-9]/;
+    return pattern.test(str);
+  }
 }
