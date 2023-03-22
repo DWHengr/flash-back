@@ -73,7 +73,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async sendVerifyCode(userId: any, email: any) {
+  async sendEmailSettingVerifyCode(userId: any, email: any) {
     const userVerify = this.userVerifyCode.get(userId);
     if (userVerify) {
       if (FlashUtil.getSecondsDiff(userVerify.time, new Date()) < 60) {

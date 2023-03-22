@@ -81,14 +81,14 @@ export class UserController {
     return ResUtil.failMsg('修改失败');
   }
 
-  @ApiOperation({ summary: '发送验证码' })
-  @Post('code')
+  @ApiOperation({ summary: '发送邮箱设置验证码' })
+  @Post('code/email-setting')
   async verify(@Body() codeVo: CodeUserVo, @Req() request) {
     if (!FlashUtil.validateEmail(codeVo.email)) {
       throw new FlashException('邮箱格式错误');
     }
     const userId = request.user.id;
-    await this.userService.sendVerifyCode(userId, codeVo.email);
+    await this.userService.sendEmailSettingVerifyCode(userId, codeVo.email);
     return ResUtil.success(null);
   }
 
