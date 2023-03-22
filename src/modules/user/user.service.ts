@@ -5,12 +5,18 @@ import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
 import { PwdUserVo } from './vo/pwd.user.vo';
 import { AvatarUserVo } from './vo/avatar.user.vo';
+import { FlashUtil } from '../../utils/flash.util';
+import { EmailService } from '../email/email.service';
+import { VerifyVo } from './vo/verify.vo';
 
 @Injectable()
 export class UserService {
+  userVerifyCode: Map<string, VerifyVo> = new Map();
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private readonly emailService: EmailService,
     private connection: Connection,
   ) {}
 
@@ -65,5 +71,21 @@ export class UserService {
     }
     user.avatar = avatarVo.avatar;
     return await this.userRepository.save(user);
+  }
+
+  async sendVerifyCode(userId: any, email: any) {
+    const userVerify = this.userVerifyCode.get(userId);
+    if (userVerify) {
+      if (FlashUtil.getSecondsDiff(userVerify.time, new Date()) < 60) {
+        throw new FlashException('验证码发送频率过快').add('userid', userId);
+      }
+    }
+    const code = FlashUtil.genVerifyCode();
+    const verifyVo = new VerifyVo();
+    verifyVo.code = code;
+    verifyVo.time = new Date();
+    verifyVo.ext = email;
+    this.userVerifyCode.set(userId, verifyVo);
+    await this.emailService.sendVerifyCodeEmail(email, code);
   }
 }

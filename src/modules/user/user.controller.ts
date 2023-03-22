@@ -9,6 +9,7 @@ import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
 import { PwdUserVo } from './vo/pwd.user.vo';
 import { AvatarUserVo } from './vo/avatar.user.vo';
+import { CodeUserVo } from './vo/code.user.vo';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -68,6 +69,14 @@ export class UserController {
     const data = await this.userService.changeAvatar(userId, avatarVo);
     if (data) return ResUtil.success('修改成功');
     return ResUtil.failMsg('修改失败');
+  }
+
+  @ApiOperation({ summary: '发送验证码' })
+  @Post('code')
+  async verify(@Body() codeVo: CodeUserVo, @Req() request) {
+    const userId = request.user.id;
+    await this.userService.sendVerifyCode(userId, codeVo.email);
+    return ResUtil.success(null);
   }
 
   // @ApiOperation({ summary: '用户删除' })
