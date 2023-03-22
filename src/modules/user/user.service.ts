@@ -8,6 +8,8 @@ import { AvatarUserVo } from './vo/avatar.user.vo';
 import { FlashUtil } from '../../utils/flash.util';
 import { EmailService } from '../email/email.service';
 import { VerifyVo } from './vo/verify.vo';
+import { SetEmailUserVo } from './vo/set.email.user.vo';
+import { LoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class UserService {
@@ -17,6 +19,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly emailService: EmailService,
+    private readonly loggerService: LoggerService,
     private connection: Connection,
   ) {}
 
@@ -86,6 +89,25 @@ export class UserService {
     verifyVo.time = new Date();
     verifyVo.ext = email;
     this.userVerifyCode.set(userId, verifyVo);
-    await this.emailService.sendVerifyCodeEmail(email, code);
+    this.emailService.sendVerifyCodeEmail(email, code).catch(() => {
+      this.loggerService.error('验证码发送失败,userid:' + userId);
+    });
+  }
+
+  async setEmail(userId: any, setEmailUserVo: SetEmailUserVo) {
+    const userVerify = this.userVerifyCode.get(userId);
+    if (!userVerify) {
+      throw new FlashException('验证码错误').add('userid', userId);
+    }
+    if (setEmailUserVo.code != userVerify.code) {
+      throw new FlashException('验证码错误').add('userid', userId);
+    }
+    if (setEmailUserVo.email != userVerify.ext) {
+      throw new FlashException('邮箱错误').add('userid', userId);
+    }
+    const user = await this.userRepository.findOne(userId);
+    user.email = setEmailUserVo.email;
+    this.userVerifyCode.delete(userId);
+    return await this.userRepository.save(user);
   }
 }

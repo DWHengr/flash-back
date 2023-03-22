@@ -9,8 +9,9 @@ import { UserEntity } from './user.entity';
 import { FlashException } from '../../exception/flash.exception';
 import { PwdUserVo } from './vo/pwd.user.vo';
 import { AvatarUserVo } from './vo/avatar.user.vo';
-import { CodeUserVo } from './vo/code.user.vo';
+import { CodeEmailSettingUserVo } from './vo/code.email.setting.user.vo';
 import { FlashUtil } from '../../utils/flash.util';
+import { SetEmailUserVo } from './vo/set.email.user.vo';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -83,13 +84,22 @@ export class UserController {
 
   @ApiOperation({ summary: '发送邮箱设置验证码' })
   @Post('code/email-setting')
-  async verify(@Body() codeVo: CodeUserVo, @Req() request) {
+  async verify(@Body() codeVo: CodeEmailSettingUserVo, @Req() request) {
     if (!FlashUtil.validateEmail(codeVo.email)) {
       throw new FlashException('邮箱格式错误');
     }
     const userId = request.user.id;
     await this.userService.sendEmailSettingVerifyCode(userId, codeVo.email);
     return ResUtil.success(null);
+  }
+
+  @ApiOperation({ summary: '设置用户邮箱' })
+  @Post('set-email')
+  async setEmail(@Body() setEmailUserVo: SetEmailUserVo, @Req() request) {
+    const userId = request.user.id;
+    const data = await this.userService.setEmail(userId, setEmailUserVo);
+    if (data) return ResUtil.success('设置成功');
+    return ResUtil.failMsg('设置失败');
   }
 
   // @ApiOperation({ summary: '用户删除' })
