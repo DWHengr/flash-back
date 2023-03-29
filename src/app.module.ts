@@ -15,6 +15,7 @@ import { LoggerModule } from './modules/logger/logger.module';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { CollocateModule } from './modules/collocate/collocate.module';
 import { EmailModule } from './modules/email/email.module';
+import { TranslateModule } from './modules/translate/translate.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { EmailModule } from './modules/email/email.module';
     TestModule,
     CollocateModule,
     UserModule,
+    TranslateModule,
   ],
   providers: [
     {
