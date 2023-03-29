@@ -76,7 +76,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async sendEmailSettingVerifyCode(userId: any, email: any) {
+  sendVerifyCode(userId: any, email: any) {
     const userVerify = this.userVerifyCode.get(userId);
     if (userVerify) {
       if (FlashUtil.getSecondsDiff(userVerify.time, new Date()) < 60) {
@@ -92,6 +92,21 @@ export class UserService {
     this.emailService.sendVerifyCodeEmail(email, code).catch(() => {
       this.loggerService.error('验证码发送失败,userid:' + userId);
     });
+  }
+
+  async sendEmailSettingVerifyCode(userId: any, email: any) {
+    this.sendVerifyCode(userId, email);
+  }
+
+  async sendForgetVerifyCode(username: any) {
+    const user = await this.userRepository.findOne({ username });
+    if (!user) {
+      throw new FlashException('用户不存在').add('username', username);
+    }
+    if (!user.email) {
+      throw new FlashException('该用户未设置邮箱').add('username', username);
+    }
+    this.sendVerifyCode(user.id, user.email);
   }
 
   async setEmail(userId: any, setEmailUserVo: SetEmailUserVo) {

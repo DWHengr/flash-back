@@ -12,6 +12,7 @@ import { AvatarUserVo } from './vo/avatar.user.vo';
 import { CodeEmailSettingUserVo } from './vo/code.email.setting.user.vo';
 import { FlashUtil } from '../../utils/flash.util';
 import { SetEmailUserVo } from './vo/set.email.user.vo';
+import { CodeForgetPwdVo } from './vo/code.forget.pwd.vo';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -90,6 +91,13 @@ export class UserController {
     }
     const userId = request.user.id;
     await this.userService.sendEmailSettingVerifyCode(userId, codeVo.email);
+    return ResUtil.success(null);
+  }
+
+  @ApiOperation({ summary: '发送忘记密码验证码' })
+  @Post('code/forget-pwd')
+  async codeForgetPassword(@Body() codeVo: CodeForgetPwdVo) {
+    await this.userService.sendForgetVerifyCode(codeVo.username);
     return ResUtil.success(null);
   }
 
