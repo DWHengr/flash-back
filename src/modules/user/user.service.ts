@@ -10,6 +10,7 @@ import { EmailService } from '../email/email.service';
 import { VerifyVo } from './vo/verify.vo';
 import { SetEmailUserVo } from './vo/set.email.user.vo';
 import { LoggerService } from '../logger/logger.service';
+import { ForgetPwdVo } from './vo/forget.pwd.vo';
 
 @Injectable()
 export class UserService {
@@ -48,14 +49,14 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async info(userId: any) {
+  async info(userId: string) {
     const user: UserEntity = await this.userRepository.findOne({
       where: { id: userId },
     });
     return user;
   }
 
-  async changePwd(userId: any, pwdVo: PwdUserVo) {
+  async changePwd(userId: string, pwdVo: PwdUserVo) {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
       throw new FlashException('用户不存在');
@@ -67,7 +68,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async changeAvatar(userId: any, avatarVo: AvatarUserVo) {
+  async changeAvatar(userId: string, avatarVo: AvatarUserVo) {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
       throw new FlashException('用户不存在');
@@ -76,7 +77,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  sendVerifyCode(userId: any, email: any) {
+  sendVerifyCode(userId: string, email: string) {
     const userVerify = this.userVerifyCode.get(userId);
     if (userVerify) {
       if (FlashUtil.getSecondsDiff(userVerify.time, new Date()) < 60) {
@@ -98,7 +99,7 @@ export class UserService {
     this.sendVerifyCode(userId, email);
   }
 
-  async sendForgetVerifyCode(username: any) {
+  async sendForgetVerifyCode(username: string) {
     const user = await this.userRepository.findOne({ username });
     if (!user) {
       throw new FlashException('用户不存在').add('username', username);
@@ -123,6 +124,28 @@ export class UserService {
     const user = await this.userRepository.findOne(userId);
     user.email = setEmailUserVo.email;
     this.userVerifyCode.delete(userId);
+    return await this.userRepository.save(user);
+  }
+
+  async setForgetPwd(forgetPwdVo: ForgetPwdVo) {
+    const user = await this.userRepository.findOne({
+      username: forgetPwdVo.username,
+    });
+    if (!user) {
+      throw new FlashException('用户不存在').add(
+        'username',
+        forgetPwdVo.username,
+      );
+    }
+    const userVerify = this.userVerifyCode.get(user.id);
+    if (!userVerify) {
+      throw new FlashException('验证码错误').add('userid', user.id);
+    }
+    if (forgetPwdVo.code != userVerify.code) {
+      throw new FlashException('验证码错误').add('userid', user.id);
+    }
+    user.password = forgetPwdVo.password;
+    this.userVerifyCode.delete(user.id);
     return await this.userRepository.save(user);
   }
 }

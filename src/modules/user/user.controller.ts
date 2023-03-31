@@ -13,6 +13,7 @@ import { CodeEmailSettingUserVo } from './vo/code.email.setting.user.vo';
 import { FlashUtil } from '../../utils/flash.util';
 import { SetEmailUserVo } from './vo/set.email.user.vo';
 import { CodeForgetPwdVo } from './vo/code.forget.pwd.vo';
+import { ForgetPwdVo } from './vo/forget.pwd.vo';
 
 @ApiTags('用户接口')
 @Controller('user')
@@ -108,6 +109,14 @@ export class UserController {
     const data = await this.userService.setEmail(userId, setEmailUserVo);
     if (data) return ResUtil.success('设置成功');
     return ResUtil.failMsg('设置失败');
+  }
+
+  @ApiOperation({ summary: '忘记密码修改' })
+  @Post('forget-pwd')
+  async forgetPwd(@Body() forgetPwdVo: ForgetPwdVo) {
+    const data = await this.userService.setForgetPwd(forgetPwdVo);
+    if (data) return ResUtil.success('修改成功');
+    return ResUtil.failMsg('修改失败');
   }
 
   // @ApiOperation({ summary: '用户删除' })
