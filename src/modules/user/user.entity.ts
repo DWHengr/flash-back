@@ -9,7 +9,7 @@ import {
 @Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn({ comment: 'id' })
-  id: number;
+  id: string;
 
   @Column({ comment: '用户名' })
   username: string;
