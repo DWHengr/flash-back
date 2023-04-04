@@ -63,4 +63,22 @@ export class TranslateService {
     });
     return response.data;
   }
+
+  toCamelCase(words: string[]): string {
+    const camelCaseWords = words.map((word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    });
+    return camelCaseWords
+      .join('')
+      .replace(/^./, words[0].charAt(0).toLowerCase());
+  }
+
+  async variableNames(variableName: string): Promise<Map<string, string>> {
+    const translate = await this.xfyun(variableName, 'cn', 'en');
+    const englishName: string = translate.data.result.trans_result.dst;
+    const words = englishName.trim().split(/\s+/);
+    const variableNameArr = new Map();
+    variableNameArr.set('LowerCamelCase', this.toCamelCase(words));
+    return variableNameArr;
+  }
 }
