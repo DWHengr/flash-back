@@ -22,6 +22,6 @@ export class TranslateController {
     const variables = await this.translateService.variableNames(
       variableNameVo.variableName,
     );
-    return ResUtil.success(variables);
+    return ResUtil.success(Object.fromEntries(variables.entries()));
   }
 }

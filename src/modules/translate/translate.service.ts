@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from 'nestjs-config';
 import * as CryptoJS from 'crypto-js';
+import { VariableNameUtil } from '../../utils/variable.name.util';
 
 @Injectable()
 export class TranslateService {
   private axios;
   private readonly config;
+
   constructor(private readonly configService: ConfigService) {
     this.axios = axios.create();
     this.config = configService.get('xfyun');
@@ -64,21 +66,27 @@ export class TranslateService {
     return response.data;
   }
 
-  toCamelCase(words: string[]): string {
-    const camelCaseWords = words.map((word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    });
-    return camelCaseWords
-      .join('')
-      .replace(/^./, words[0].charAt(0).toLowerCase());
-  }
-
   async variableNames(variableName: string): Promise<Map<string, string>> {
     const translate = await this.xfyun(variableName, 'cn', 'en');
     const englishName: string = translate.data.result.trans_result.dst;
     const words = englishName.trim().split(/\s+/);
     const variableNameArr = new Map();
-    variableNameArr.set('LowerCamelCase', this.toCamelCase(words));
+    variableNameArr.set(
+      'LowerCamelCase',
+      VariableNameUtil.toLowerCamelCase(words),
+    );
+    variableNameArr.set(
+      'UpperCamelCase',
+      VariableNameUtil.toUpperCamelCase(words),
+    );
+    variableNameArr.set(
+      'LowerUnderline',
+      VariableNameUtil.toLowerUnderline(words),
+    );
+    variableNameArr.set(
+      'UpperUnderline',
+      VariableNameUtil.toUpperUnderline(words),
+    );
     return variableNameArr;
   }
 }
