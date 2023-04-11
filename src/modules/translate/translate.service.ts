@@ -66,27 +66,31 @@ export class TranslateService {
     return response.data;
   }
 
-  async variableNames(variableName: string): Promise<Map<string, string>> {
+  async variableNames(variableName: string): Promise<any[]> {
     const translate = await this.xfyun(variableName, 'cn', 'en');
     const englishName: string = translate.data.result.trans_result.dst;
     const words = englishName.trim().split(/\s+/);
-    const variableNameArr = new Map();
-    variableNameArr.set(
-      'LowerCamelCase',
-      VariableNameUtil.toLowerCamelCase(words),
-    );
-    variableNameArr.set(
-      'UpperCamelCase',
-      VariableNameUtil.toUpperCamelCase(words),
-    );
-    variableNameArr.set(
-      'LowerUnderline',
-      VariableNameUtil.toLowerUnderline(words),
-    );
-    variableNameArr.set(
-      'UpperUnderline',
-      VariableNameUtil.toUpperUnderline(words),
-    );
+    const variableNameArr = [];
+    variableNameArr.push({
+      name: 'LowerCamelCase',
+      describe: '小驼峰',
+      value: VariableNameUtil.toLowerCamelCase(words),
+    });
+    variableNameArr.push({
+      name: 'UpperCamelCase',
+      describe: '大驼峰',
+      value: VariableNameUtil.toUpperCamelCase(words),
+    });
+    variableNameArr.push({
+      name: 'LowerUnderline',
+      describe: '小下划线',
+      value: VariableNameUtil.toLowerUnderline(words),
+    });
+    variableNameArr.push({
+      name: 'UpperUnderline',
+      describe: '大下划线',
+      value: VariableNameUtil.toUpperUnderline(words),
+    });
     return variableNameArr;
   }
 }
